@@ -1,0 +1,253 @@
+SOLID PRINCIPLES
+
+1. S - Single Responsibility PRINCIPLE
+
+A single class should only have a single job 
+
+❌ BAD EXAMPLE:
+
+class Invoice {
+
+    public void calculateTotal() {
+        System.out.println("Calculating total...");
+    }
+
+    public void saveToDatabase() {
+        System.out.println("Saving invoice...");
+    }
+
+    public void printInvoice() {
+        System.out.println("Printing invoice...");
+    }
+}
+
+This class has three responsibilities:
+
+1. Business logic
+2. Database
+3. Printing
+
+*******************************************************
+
+2. O — Open Closed Principle (OCP)
+
+
+
+You should be able to add new functionality without changing existing code.
+
+❌ BAD EXAMPLE
+class Payment {
+
+    public void pay(String type) {
+
+        if(type.equals("CreditCard")) {
+            System.out.println("Paid using Credit Card");
+        }
+
+        else if(type.equals("UPI")) {
+            System.out.println("Paid using UPI");
+        }
+    }
+}
+Suppose tomorrow PayPal is added.
+
+You modify this class.
+
+Later Apple Pay comes.
+
+Modify again.
+
+Risk of introducing bugs.
+
+✅ GOOD EXAMPLE
+
+interface Payment {
+    void pay();
+}
+
+CREDIT Card
+class CreditCardPayment implements Payment {
+
+    public void pay() {
+        System.out.println("Credit Card Payment");
+    }
+}
+
+etc
+
+Real-life Analogy
+
+Think of a mobile charger.
+
+The socket remains the same.
+
+Different chargers can plug into it.
+
+No need to redesign the socket every time.
+
+******************************************
+
+3. L — Liskov Substitution Principle (LSP)
+
+A child class should be able to replace its parent without breaking the program.
+
+❌ Bad Example
+class Bird {
+
+    public void fly() {
+        System.out.println("Flying...");
+    }
+}
+
+Penguin
+
+class Penguin extends Bird {
+
+    @Override
+    public void fly() {
+        throw new UnsupportedOperationException();
+    }
+}
+
+Main
+
+Bird bird = new Penguin();
+
+bird.fly();
+
+Crash.
+
+Penguin cannot fly.
+
+Violation of LSP.
+
+✅ Good Example
+
+Separate flying behavior.
+
+class Bird {
+}
+interface Flyable {
+    void fly();
+}
+class Sparrow extends Bird implements Flyable {
+
+    public void fly() {
+        System.out.println("Flying...");
+    }
+}
+class Penguin extends Bird {
+
+}
+
+Now
+
+Penguin doesn't pretend to fly.
+
+No broken behavior.
+
+
+***************************************************
+
+4. I — Interface Segregation Principle (ISP)
+
+Don't force a class to implement methods it doesn't need.
+
+❌ Bad Example
+interface Worker {
+
+    void work();
+
+    void eat();
+
+    void sleep();
+}
+
+Robot
+
+class Robot implements Worker {
+
+    public void work() {
+        System.out.println("Working");
+    }
+
+    public void eat() {
+
+    }
+
+    public void sleep() {
+
+    }
+}
+
+Robot doesn't eat.
+
+Robot doesn't sleep.
+
+Still forced to implement them.
+
+Bad design.
+
+✅ Good Example
+
+Split interfaces.
+
+interface Workable {
+
+    void work();
+}
+interface Eatable {
+
+    void eat();
+}
+interface Sleepable {
+
+    void sleep();
+}
+
+Human
+
+class Human implements Workable, Eatable, Sleepable {
+
+    public void work() {}
+
+    public void eat() {}
+
+    public void sleep() {}
+}
+
+Robot
+
+class Robot implements Workable {
+
+    public void work() {}
+}
+
+Perfect.
+
+Only implements what it needs.
+
+Real-life Analogy
+
+A TV remote has buttons for TV functions.
+
+Imagine if every TV remote also had buttons to drive a car.
+
+Most users would never use them.
+
+Interfaces should expose only relevant functionality.
+
+*******************************************************
+
+SUMMARY
+
+
+| Principle                     | Meaning                                                     | Goal                              |
+| ----------------------------- | ----------------------------------------------------------- | --------------------------------- |
+| **S - Single Responsibility** | One class should have one job                               | Easier maintenance                |
+| **O - Open/Closed**           | Extend behavior without modifying existing code             | Safer feature additions           |
+| **L - Liskov Substitution**   | Subclasses should be usable wherever the parent is expected | Correct inheritance               |
+| **I - Interface Segregation** | Prefer small, focused interfaces                            | Avoid unnecessary implementations |
+| **D - Dependency Inversion**  | Depend on abstractions, not concrete classes                | Loose coupling and flexibility    |
+
+*******************************
